@@ -52,7 +52,7 @@ class User(Base):
 
 
 class Master(Base):
-    """Профиль мастера. Отделён от User: клиент может позже стать мастером."""
+    #Профиль мастера. Отделён от User: клиент может позже стать мастером.
 
     __tablename__ = "masters"
 
@@ -84,7 +84,7 @@ class Service(Base):
     )
     name: Mapped[str] = mapped_column(String(100))
     duration_minutes: Mapped[int]
-    # Цена в тенге целым числом: float для денег не используют
+    # Цена в тенге целым числом(не float)
     price: Mapped[int]
     is_active: Mapped[bool] = mapped_column(default=True)
 
@@ -92,7 +92,7 @@ class Service(Base):
 
 
 class WorkingHours(Base):
-    """Рабочий интервал в день недели. Перерыв задаётся двумя интервалами: 10-14 и 15-19."""
+    #Рабочий интервал в день недели. Перерыв задаётся двумя интервалами: 10-14 и 15-19.
 
     __tablename__ = "working_hours"
     __table_args__ = (
@@ -133,8 +133,7 @@ class Booking(Base):
     service_id: Mapped[int] = mapped_column(ForeignKey("services.id"))
     client_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     starts_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    # Храним конец явно: если мастер потом изменит длительность услуги,
-    # старые записи не должны «поехать».
+    # Храним конец явно: если мастер потом изменит длительность услуги, это не должно менять уже забронированные записи.
     ends_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     status: Mapped[BookingStatus] = mapped_column(
         Enum(BookingStatus, name="booking_status"), default=BookingStatus.confirmed
